@@ -1,7 +1,13 @@
+import random
+from datetime import datetime, timezone, timedelta
+
 import vk_api
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
-import random
+
 from config import TOKEN, GROUP_ID
+
+DAYS_WEEK = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье']
+
 
 def main():
     vk_session = vk_api.VkApi(
@@ -12,17 +18,16 @@ def main():
     for event in longpoll.listen():
         if event.type == VkBotEventType.MESSAGE_NEW:
             vk = vk_session.get_api()
-            user = vk.users.get(user_ids=[event.obj.message["from_id"]], fields="city, bdate, country")[0]
-            city = user["city"]['title'] if "city" in user else None
-            name = user["first_name"]
-
-            vk.messages.send(user_id=user['id'],
-                             message=f"Привет, {name}!",
-                             random_id=random.randint(-9*10**18, 9*10**18))
-            if city:
-                vk.messages.send(user_id=user['id'],
-                                 message=f"Как поживает {city}?",
-                                 random_id=random.randint(-9*10**18, 9*10**18))
+            if any(text in event.obj.message['text'] for text in ["время", "число", "дата", "день"]):
+                offset = timezone(timedelta(hours=3))
+                vk.messages.send(user_id=event.obj.message["from_id"],
+                                 message=datetime.now(offset).strftime(
+                                     f'%Y-%m-%d %H:%M:%S {DAYS_WEEK[datetime.now(offset).weekday()]}'),
+                                 random_id=random.randint(-9 * 10 ** 18, 9 * 10 ** 18))
+            else:
+                vk.messages.send(user_id=event.obj.message["from_id"],
+                                 message="Вы можете узнать сегодняшнюю дату, московское время и день недели, введя одно из этих слов в своем сообщении «время», «число», «дата», «день»",
+                                 random_id=random.randint(-9 * 10 ** 18, 9 * 10 ** 18))
 
 
 if __name__ == '__main__':
