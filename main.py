@@ -1,7 +1,6 @@
-from datetime import datetime
-
 import vk_api
-from config import PASSWORD, LOGIN
+
+from config import PASSWORD, LOGIN, ALBUM_ID, GROUP_ID
 
 
 def captcha_handler(captcha):
@@ -43,15 +42,10 @@ def main():
     except vk_api.AuthError as error_msg:
         print(error_msg)
         return
-    vk = vk_session.get_api()
 
-    response = vk.friends.get(fields="bdate", order="name")
-    if response['items']:
-        for friend in response['items']:
-            try:
-                print(f'{friend['last_name']} {friend["first_name"]} Дата рождения: {friend["bdate"]}')
-            except KeyError:
-                print(f'{friend['last_name']} {friend["first_name"]}')
+    upload = vk_api.VkUpload(vk_session)
+    for path_img in ['cat.png', 'forest.png']:
+        upload.photo(f'static/img/{path_img}', album_id=ALBUM_ID, group_id=GROUP_ID)
 
 
 if __name__ == '__main__':
