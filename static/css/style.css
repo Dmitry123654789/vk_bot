@@ -1,0 +1,13 @@
+.table-anouther {
+    width: 500px;
+}
+
+.table-city {
+    width: 400px;
+}
+
+tbody * {
+    border-color: black;
+    border-style: solid;
+    border-width: 1px;
+}
