@@ -1,0 +1,41 @@
+{
+  "one_time": false,
+  "buttons": [
+    [
+      {
+        "action": {
+          "type": "text",
+          "payload": {"command": "map"},
+          "label": "Базовая карта"
+        }
+      }
+    ],
+    [
+      {
+        "action": {
+          "type": "text",
+          "payload": {"command": "driving"},
+          "label": "Карта для автомобильной навигации"
+        }
+      }
+    ],
+    [
+      {
+        "action": {
+          "type": "text",
+          "payload": {"command": "transit"},
+          "label": "Карта общественного транспорта"
+        }
+      }
+    ],
+    [
+      {
+        "action": {
+          "type": "text",
+          "payload": {"command": "admin"},
+          "label": "Административная карта"
+        }
+      }
+    ]
+  ]
+}
